@@ -3,10 +3,10 @@ use core::fmt;
 use spin::Mutex;
 use lazy_static::lazy_static;
 
-// reduce the warning for unused Color enum
+// Add allow(dead_code) attribute to reduce the warning for unused Color enum
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-// each enum variant is stored as an u8
+// Each enum variant is stored as an u8
 #[repr(u8)]
 pub enum Color {
     Black = 0,
