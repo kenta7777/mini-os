@@ -142,7 +142,7 @@ macro_rules! print {
     ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
 }
 
-// println macro for VGA buffer
+// Println macro for VGA buffer
 #[macro_export]
 macro_rules! println {
     () => ($crate::print!("\n"));
