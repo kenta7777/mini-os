@@ -18,8 +18,11 @@ pub extern "C" fn _start() -> ! {
     // Call the idt init routine in lib.rs
     mini_os::init();
 
-    // Invokes a breakpoint exception
-    x86_64::instructions::interrupts::int3();
+    fn stack_overflow() {
+        stack_overflow();
+    }
+
+    stack_overflow();
 
     println!("It did not crash!");
     loop {}
