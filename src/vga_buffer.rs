@@ -1,7 +1,7 @@
-use volatile::Volatile;
 use core::fmt;
-use spin::Mutex;
 use lazy_static::lazy_static;
+use spin::Mutex;
+use volatile::Volatile;
 
 // Add allow(dead_code) attribute to reduce the warning for unused Color enum
 #[allow(dead_code)]
@@ -28,7 +28,7 @@ pub enum Color {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-// To ensure that the layout of background is the same as foreground 
+// To ensure that the layout of background is the same as foreground
 #[repr(transparent)]
 struct ColorCode(u8);
 
@@ -43,7 +43,7 @@ impl ColorCode {
 // To order the fields of struct
 #[repr(C)]
 struct ScreenChar {
-    ascii_character: u8, 
+    ascii_character: u8,
     color_code: ColorCode,
 }
 
@@ -51,29 +51,26 @@ struct ScreenChar {
 const BUFFER_HEIGHT: usize = 25;
 const BUFFER_WIDTH: usize = 80;
 
-// To ensure that this struct has the same memory layout as its single field 
+// To ensure that this struct has the same memory layout as its single field
 #[repr(transparent)]
 struct Buffer {
-    chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT]
+    chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
 pub struct Writer {
     column_position: usize,
     color_code: ColorCode,
-    buffer: &'static mut Buffer
+    buffer: &'static mut Buffer,
 }
 
 // Initialize const lazily
 lazy_static! {
-    pub static ref WRITER: Mutex<Writer> = Mutex::new(
-        Writer {
-            column_position: 0,
-            color_code: ColorCode::new(Color::Yellow, Color::Black),
-            buffer: unsafe {&mut *(0xb8000 as *mut Buffer)},
-        }
-    );
+    pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
+        column_position: 0,
+        color_code: ColorCode::new(Color::Yellow, Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+    });
 }
-
 
 impl Writer {
     pub fn write_byte(&mut self, byte: u8) {
@@ -103,7 +100,7 @@ impl Writer {
                 // ASCII
                 0x20..=0x7e | b'\n' => self.write_byte(byte),
                 // Not part of printable ASCII
-                _ => self.write_byte(0xfe)
+                _ => self.write_byte(0xfe),
             }
         }
     }

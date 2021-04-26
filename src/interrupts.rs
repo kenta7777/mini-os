@@ -1,9 +1,9 @@
 #![no_std]
 
-use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
-use crate::println;
 use crate::gdt;
+use crate::println;
 use lazy_static::lazy_static;
+use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
 
 lazy_static! {
     static ref IDT: InterruptDescriptorTable = {
@@ -24,17 +24,15 @@ pub fn init_idt() {
 }
 
 // Breakpoint exception handler function
-extern "x86-interrupt" fn breakpoint_handler(
-    stack_frame: InterruptStackFrame
-)
-{
+extern "x86-interrupt" fn breakpoint_handler(stack_frame: InterruptStackFrame) {
     // Pretty-prints interrupt stack frame
     println!("EXCEPTION: BREAKPOINT\n{:#?}", stack_frame);
 }
 
 // Double fault exception handler function
 extern "x86-interrupt" fn double_fault_handler(
-    stack_frame: InterruptStackFrame, _error_code: u64) -> !
-{
+    stack_frame: InterruptStackFrame,
+    _error_code: u64,
+) -> ! {
     panic!("EXCEPTION: DOUBLE FAULT\n{:#?}", stack_frame);
 }
