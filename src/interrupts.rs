@@ -2,6 +2,7 @@
 
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
 use crate::println;
+use crate::gdt;
 use lazy_static::lazy_static;
 
 lazy_static! {
@@ -9,7 +10,11 @@ lazy_static! {
         let mut idt = InterruptDescriptorTable::new();
         // Set break point handler function in interrupt descriptor table
         idt.breakpoint.set_handler_fn(breakpoint_handler);
-        idt.double_fault.set_handler_fn(double_fault_handler);
+        unsafe {
+            // Specify interrupt stack index for double fault in interrupt stack table
+            idt.double_fault.set_handler_fn(double_fault_handler)
+            .set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX);
+        }
         idt
     };
 }
