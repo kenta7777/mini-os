@@ -2,6 +2,7 @@
 #![no_main]
 
 mod vga_buffer;
+mod serial;
 
 use core::panic::PanicInfo;
 
@@ -18,12 +19,15 @@ pub extern "C" fn _start() -> ! {
     // Call the idt init routine in lib.rs
     mini_os::init();
 
-    fn stack_overflow() {
-        stack_overflow();
-    }
+    // fn stack_overflow() {
+    //     stack_overflow();
+    // }
 
-    stack_overflow();
+    // stack_overflow();
 
     println!("It did not crash!");
-    loop {}
+    loop {
+        use mini_os::print;
+        print!("-");
+    }
 }
