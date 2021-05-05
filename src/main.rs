@@ -9,7 +9,7 @@ use core::panic::PanicInfo;
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    mini_os::hlt_loop();
 }
 
 #[no_mangle]
@@ -26,8 +26,9 @@ pub extern "C" fn _start() -> ! {
     // stack_overflow();
 
     println!("It did not crash!");
-    loop {
-        use mini_os::print;
-        print!("-");
-    }
+    // loop {
+    //     use mini_os::print;
+    //     print!("-");
+    // }
+    mini_os::hlt_loop();
 }
