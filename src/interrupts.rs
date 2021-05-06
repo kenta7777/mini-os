@@ -1,5 +1,3 @@
-#![no_std]
-
 use crate::gdt;
 use crate::print;
 use crate::println;
